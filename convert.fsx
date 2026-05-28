@@ -1,30 +1,41 @@
 #!/usr/bin/env -S dotnet fsi
 
 #r "nuget: FSharpMyExt, 2.0.0-prerelease.11"
-#r "nuget: Twee.FSharp, 0.4"
+#r "nuget: Twine.Twee.FSharp, 0.5"
 #r @"Z:\projects\GamebookGenerator\src\Core\bin\Debug\net6.0\GamebookGenerator.Core.dll"
 #r @"Z:\projects\GamebookGenerator\src\Twine\bin\Debug\net6.0\GamebookGenerator.Twine.dll"
 open GamebookGenerator.Core.Parser
 open GamebookGenerator.Twine
+open Twine.Twee.FSharp
+open Twine.Twee.FSharp.Printer
+open Twine.SugarCube.FSharp
+open Twine.SugarCube.FSharp.Printer
+open Twine.SugarCube.FSharp.Helpers
 
-let storyTitle title : Twee.FSharp.Passage =
+module PassageBody =
+    let ofLines =
+        List.map (fun str -> line [text str])
+
+let storyTitle title : Passage<PassageBody> =
     {
         Header = {
             Name = "StoryTitle"
             Tags = None
             Metadata = None
         }
-        Body = [title]
+        Body = PassageBody.ofLines [
+            title
+        ]
     }
 
-let storyData (startPassage: string) : Twee.FSharp.Passage =
+let storyData (startPassage: string) : Passage<PassageBody> =
     {
         Header = {
             Name = "StoryData"
             Tags = None
             Metadata = None
         }
-        Body = [
+        Body = PassageBody.ofLines [
             "{"
             "  \"ifid\": \"5ED897FD-52B4-4903-AEA8-B264106999CC\"," // todo: generate IFID
             "  \"format\": \"SugarCube\","
@@ -35,14 +46,14 @@ let storyData (startPassage: string) : Twee.FSharp.Passage =
         ]
     }
 
-let gbSettings : Twee.FSharp.Passage =
+let gbSettings : Passage<PassageBody> =
     {
         Header = {
             Name = "gb-settings"
             Tags = None
             Metadata = None
         }
-        Body = [
+        Body = PassageBody.ofLines [
             "{"
             "    \"end_text\": \"THE END\","
             "    \"death_text\": \"YOU DIED\","
@@ -86,7 +97,9 @@ let convert () =
         ]
     )
     |> Result.map (
-        Twee.FSharp.Document.toString Twee.FSharp.NewlineType.Lf
+        Document.toString
+            PassageBody.shows
+            NewlineType.Lf
     )
     |> Result.iter (fun content ->
         let path = "Александр.twee"
