@@ -59,7 +59,7 @@ let gbSettings : Passage<PassageBody> =
             "    \"death_text\": \"YOU DIED\","
             "    \"separator\": \"0\","
             "    \"break\": \"0\","
-            "    \"css\": \"\","
+            "    \"css\": \"p {\\r\\n    text-align: justify;\\r\\n    text-align-last: left;\\r\\n}\\r\\n\","
             "    \"page_size\": \"A4-P\","
             "    \"cover\": \"0\","
             "    \"mdtype\": \"sugarcube\","
@@ -90,7 +90,7 @@ let convert () =
     |> Result.map Document.toTwine
     |> Result.map (fun document ->
         [
-            storyTitle "АЛЕКСАНДР И АНТИЧНЫЙ БАРДАК"
+            storyTitle "АЛЕКСАНДР. КАК БОРОТЬСЯ С ТИРАНАМИ, НО СЛУЧАЙНО СТАТЬ ОДНИМ ИЗ НИХ."
             storyData "Start"
             gbSettings
             yield! document
