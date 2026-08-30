@@ -106,4 +106,20 @@ let convert () =
         System.IO.File.WriteAllText(path, content)
     )
 
+let duplicates () =
+    Document.parseFile @"src/Александр.txt"
+    |> Result.map (fun (result, _, _) ->
+        result.Paragraphs
+        |> List.groupBy (fun x -> x.Id)
+        |> List.choose (fun (id, xs) ->
+            if List.length xs <= 1 then
+                None
+            else
+                Some [string id; string <| List.length xs]
+        )
+        |> fun xs -> ["Параграф"; "Дублей"]::xs
+        |> FsharpMyExtension.Primitives.String.createTable 2
+        |> printfn "%s"
+    )
+
 convert ()
