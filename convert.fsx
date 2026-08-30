@@ -46,6 +46,16 @@ let storyData (startPassage: string) : Passage<PassageBody> =
         ]
     }
 
+let gbIntroduction body : Passage<PassageBody> =
+    {
+        Header = {
+            Name = "gb-introduction"
+            Tags = None
+            Metadata = None
+        }
+        Body = body
+    }
+
 let gbSettings : Passage<PassageBody> =
     {
         Header = {
@@ -89,6 +99,11 @@ let convert () =
     |> Result.map (fun (result, _, _) -> result)
     |> Result.map Document.toTwine
     |> Result.map (fun document ->
+        let document =
+            match document with
+            | x::xs ->
+                gbIntroduction x.Body :: xs
+            | [] -> []
         [
             storyTitle "АЛЕКСАНДР. КАК БОРОТЬСЯ С ТИРАНАМИ, НО СЛУЧАЙНО СТАТЬ ОДНИМ ИЗ НИХ."
             storyData "Start"
