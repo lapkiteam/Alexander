@@ -57,6 +57,20 @@ let gbIntroduction body : Passage<PassageBody> =
     }
 
 let gbSettings : Passage<PassageBody> =
+    let css =
+        [
+            "p {"
+            "  text-align: justify;"
+            "  text-align-last: left;"
+            "}"
+            ""
+            ".cover_title {"
+            "  font-size: 4.5em;"
+            "}"
+        ]
+        |> String.concat "\\r\\n"
+        |> sprintf "\"%s\""
+
     {
         Header = {
             Name = "gb-settings"
@@ -69,7 +83,7 @@ let gbSettings : Passage<PassageBody> =
             "    \"death_text\": \"YOU DIED\","
             "    \"separator\": \"0\","
             "    \"break\": \"0\","
-            "    \"css\": \"p {\\r\\n    text-align: justify;\\r\\n    text-align-last: left;\\r\\n}\\r\\n\","
+            $"    \"css\": %s{css},"
             "    \"page_size\": \"A5\","
             "    \"cover\": \"1\","
             "    \"mdtype\": \"sugarcube\","
