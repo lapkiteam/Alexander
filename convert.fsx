@@ -72,7 +72,38 @@ let gbIntroduction body : Passage<PassageBody> =
         Body = body
     }
 
-let gbSettings : Passage<PassageBody> =
+[<RequireQualifiedAccess>]
+type PageSize =
+    | A4P
+    | A5
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+[<RequireQualifiedAccess>]
+module PageSize =
+    let toString = function
+        | PageSize.A4P -> "A4-P"
+        | PageSize.A5 -> "A5"
+
+let gbSettings (pageSize: PageSize) : Passage<PassageBody> =
+    let css =
+        let coverTitlePageSize =
+            match pageSize with
+            | PageSize.A5 -> "4.5em"
+            | PageSize.A4P -> "7em"
+
+        [
+            "p {"
+            "  text-align: justify;"
+            "  text-align-last: left;"
+            "}"
+            ""
+            ".cover_title {"
+            $"  font-size: {coverTitlePageSize};"
+            "}"
+        ]
+        |> String.concat "\\r\\n"
+        |> sprintf "\"%s\""
+
     {
         Header = {
             Name = "gb-settings"
@@ -85,9 +116,9 @@ let gbSettings : Passage<PassageBody> =
             "    \"death_text\": \"YOU DIED\","
             "    \"separator\": \"0\","
             "    \"break\": \"0\","
-            "    \"css\": \"p {\\r\\n    text-align: justify;\\r\\n    text-align-last: left;\\r\\n}\\r\\n\","
-            "    \"page_size\": \"A5\","
-            "    \"cover\": \"0\","
+            $"    \"css\": %s{css},"
+            $"    \"page_size\": \"{PageSize.toString pageSize}\","
+            "    \"cover\": \"1\","
             "    \"mdtype\": \"sugarcube\","
             "    \"resolution\": \"300\","
             "    \"image_resolution\": \"300\","
@@ -110,6 +141,29 @@ let gbSettings : Passage<PassageBody> =
         ]
     }
 
+let gbFrontCover title slogan author : Passage<PassageBody> =
+    {
+        Header = {
+            Name = "gb-front-cover"
+            Tags = None
+            Metadata = None
+        }
+        Body = PassageBody.ofLines [
+            "<div class='cover_top'>"
+            $"  <h1 class='cover_title'>%s{title}</h1>"
+            $"  <h2>%s{slogan}</h2>"
+            "</div>"
+            "<div class='cover_image'></div>"
+            "<div class='cover_bottom'>"
+            $"  <h2>%s{author}</h2>"
+            "</div>"
+        ]
+    }
+
+let bookName = "Александр"
+let bookSlogan = "Как бороться с тиранами,<br>но случайно стать одним из них"
+let author = "Пётр Прокошев"
+
 let convert () =
     Document.parseFile @"src/Александр.txt"
     |> Result.map (fun (result, _, _) -> result)
@@ -121,9 +175,10 @@ let convert () =
                 gbIntroduction x.Body :: xs
             | [] -> []
         [
-            storyTitle "АЛЕКСАНДР. КАК БОРОТЬСЯ С ТИРАНАМИ, НО СЛУЧАЙНО СТАТЬ ОДНИМ ИЗ НИХ."
+            gbFrontCover bookName bookSlogan author
+            storyTitle bookName
             storyData "Start"
-            gbSettings
+            gbSettings PageSize.A4P
             yield! document
         ]
     )
