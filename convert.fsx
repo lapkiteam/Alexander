@@ -72,8 +72,25 @@ let gbIntroduction body : Passage<PassageBody> =
         Body = body
     }
 
-let gbSettings : Passage<PassageBody> =
+[<RequireQualifiedAccess>]
+type PageSize =
+    | A4P
+    | A5
+
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
+[<RequireQualifiedAccess>]
+module PageSize =
+    let toString = function
+        | PageSize.A4P -> "A4-P"
+        | PageSize.A5 -> "A5"
+
+let gbSettings (pageSize: PageSize) : Passage<PassageBody> =
     let css =
+        let coverTitlePageSize =
+            match pageSize with
+            | PageSize.A5 -> "4.5em"
+            | PageSize.A4P -> "7em"
+
         [
             "p {"
             "  text-align: justify;"
@@ -81,7 +98,7 @@ let gbSettings : Passage<PassageBody> =
             "}"
             ""
             ".cover_title {"
-            "  font-size: 4.5em;"
+            $"  font-size: {coverTitlePageSize};"
             "}"
         ]
         |> String.concat "\\r\\n"
@@ -100,7 +117,7 @@ let gbSettings : Passage<PassageBody> =
             "    \"separator\": \"0\","
             "    \"break\": \"0\","
             $"    \"css\": %s{css},"
-            "    \"page_size\": \"A5\","
+            $"    \"page_size\": \"{PageSize.toString pageSize}\","
             "    \"cover\": \"1\","
             "    \"mdtype\": \"sugarcube\","
             "    \"resolution\": \"300\","
@@ -161,7 +178,7 @@ let convert () =
             gbFrontCover bookName bookSlogan author
             storyTitle bookName
             storyData "Start"
-            gbSettings
+            gbSettings PageSize.A4P
             yield! document
         ]
     )
