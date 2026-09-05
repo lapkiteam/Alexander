@@ -124,7 +124,7 @@ let gbSettings : Passage<PassageBody> =
         ]
     }
 
-let gbFrontCover bookName bookNameAdded author : Passage<PassageBody> =
+let gbFrontCover title slogan author : Passage<PassageBody> =
     {
         Header = {
             Name = "gb-front-cover"
@@ -133,8 +133,8 @@ let gbFrontCover bookName bookNameAdded author : Passage<PassageBody> =
         }
         Body = PassageBody.ofLines [
             "<div class='cover_top'>"
-            $"  <h1 class='cover_title'>%s{bookName}</h1>"
-            $"  <h2>%s{bookNameAdded}</h2>"
+            $"  <h1 class='cover_title'>%s{title}</h1>"
+            $"  <h2>%s{slogan}</h2>"
             "</div>"
             "<div class='cover_image'></div>"
             "<div class='cover_bottom'>"
@@ -144,7 +144,7 @@ let gbFrontCover bookName bookNameAdded author : Passage<PassageBody> =
     }
 
 let bookName = "Александр"
-let bookNameAdded = "Как бороться с тиранами,<br>но случайно стать одним из них"
+let bookSlogan = "Как бороться с тиранами,<br>но случайно стать одним из них"
 let author = "Пётр Прокошев"
 
 let convert () =
@@ -158,7 +158,7 @@ let convert () =
                 gbIntroduction x.Body :: xs
             | [] -> []
         [
-            gbFrontCover bookName bookNameAdded author
+            gbFrontCover bookName bookSlogan author
             storyTitle bookName
             storyData "Start"
             gbSettings
