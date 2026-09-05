@@ -2,8 +2,24 @@
 
 #r "nuget: FSharpMyExt, 2.0.0-prerelease.11"
 #r "nuget: Twine.Twee.FSharp, 0.5"
-#r @"Z:\projects\GamebookGenerator\src\Core\bin\Debug\net6.0\GamebookGenerator.Core.dll"
-#r @"Z:\projects\GamebookGenerator\src\Twine\bin\Debug\net6.0\GamebookGenerator.Twine.dll"
+#load "./lib/GamebookGenerator/src/Core/Ast.fs"
+#load "./lib/GamebookGenerator/src/Core/Helpers.fs"
+#load "./lib/GamebookGenerator/src/Core/Parser/Common.fs"
+#load "./lib/GamebookGenerator/src/Core/Parser/Inline.fs"
+#load "./lib/GamebookGenerator/src/Core/Parser/Line.fs"
+#load "./lib/GamebookGenerator/src/Core/Parser/Paragraph.fs"
+#load "./lib/GamebookGenerator/src/Core/Parser/Document.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Ast.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Helpers.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Printer/Link.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Printer/Inline.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Printer/Line.fs"
+#load "./lib/GamebookGenerator/src/Twine/SugarCube/Printer/PassageBody.fs"
+#load "./lib/GamebookGenerator/src/Twine/Inline.fs"
+#load "./lib/GamebookGenerator/src/Twine/Line.fs"
+#load "./lib/GamebookGenerator/src/Twine/ParagraphBody.fs"
+#load "./lib/GamebookGenerator/src/Twine/Paragraph.fs"
+#load "./lib/GamebookGenerator/src/Twine/Document.fs"
 open GamebookGenerator.Core.Parser
 open GamebookGenerator.Twine
 open Twine.Twee.FSharp
