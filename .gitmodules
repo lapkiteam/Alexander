@@ -1,0 +1,3 @@
+[submodule "lib/GamebookGenerator"]
+	path = lib/GamebookGenerator
+	url = https://github.com/lapkiteam/GamebookGenerator.git
